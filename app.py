@@ -1,13 +1,12 @@
 import streamlit as st
 import google.generativeai as genai
 import requests
-from dotenv import load_dotenv
-import os
+from decouple import Config
 
-load_dotenv()
+config = Config("config.toml")
 
-OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+OPENWEATHER_API_KEY = config("OPENWEATHER_API_KEY")
+GEMINI_API_KEY = config("GEMINI_API_KEY")
 
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-2.0-flash')
@@ -34,7 +33,8 @@ def get_weather(location):
 
 def get_tourist_attractions(location):
     
-    prompt = f""" You are a helpful assistant. Provide a list of top tourist attractions in {location}.
+    prompt = f"""
+    You are a helpful assistant. Provide a list of top tourist attractions in {location}.
     Include brief descriptions for each attraction.
     """
     response = model.generate_content(prompt)
@@ -84,7 +84,10 @@ if user_input:
             combined_response = f"{weather_response}\n\n{attractions_response}"
 
             # Refine the response using the LLM
-            refinement_prompt = f""" You are a helpful assistant. Refine the following response to make it more conversational and user-friendly: "{combined_response}" """
+            refinement_prompt = f"""
+            You are a helpful assistant. Refine the following response to make it more conversational and user-friendly:
+            "{combined_response}"
+            """
             final_response = model.generate_content(refinement_prompt).text
 
             # Display the final response

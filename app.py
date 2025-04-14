@@ -9,7 +9,7 @@ OPENWEATHER_API_KEY = config("OPENWEATHER_API_KEY")
 GEMINI_API_KEY = config("GEMINI_API_KEY")
 
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-2.0-flash')
+model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
 
 st.set_page_config(page_title="☁️ Weather & Tourist Assistant", page_icon="🌦️")
 st.title("🌤️ Weather & Tourist Assistant")
